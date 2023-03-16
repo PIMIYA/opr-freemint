@@ -16,7 +16,7 @@ const Home: NextPage = () => {
   const [, switchNetwork] = useNetwork();
   const isWrongNetwork = useNetworkMismatch();
 
-  const contractAddress = "";
+  const contractAddress = "0x110CA23E1Ef5971aC87ba4C8E9E770dbb2E47bEd";
 
 
   useEffect(() => {
@@ -53,7 +53,7 @@ const Home: NextPage = () => {
           <Web3Button
             contractAddress={contractAddress}
             action={(contract) => {
-              contract.call('claim', address, 1)
+              contract.erc721.claim(1);
             }}
             onSuccess={() => alert("Claimed NFT!")}
             onError={(err) => alert(err)}
@@ -61,9 +61,8 @@ const Home: NextPage = () => {
             Claim NFT
           </Web3Button>
         </div>
-
-      </main>
-    </div>
+      </main >
+    </div >
   );
 };
 
