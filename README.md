@@ -2,4 +2,5 @@
 
 - [x] connect wallet
 - [x] web3BTN
-- [ ] take a picture then web3BTN claim free mint show up.
+- [ ] take a picture and upload to DB (with wallet address created)
+- [ ] then show the web3button to the user for claiming the free NFT
