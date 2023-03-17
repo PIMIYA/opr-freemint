@@ -17,11 +17,11 @@ import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { BigNumber, utils } from "ethers";
-
+import { parseIneligibility } from "../utils/parseIneligibility";
 
 // Put Your Edition Drop Contract address from the dashboard here
 const myEditionDropContractAddress =
-  "0x9c...";
+  "0x9c4463e2deA3b0f20e9295CCE78DABe0d722f5Ba";
 
 // Put your token ID here
 const tokenId = 0;
@@ -313,7 +313,7 @@ const Home: NextPage = () => {
                       ) : (
                         <Web3Button
                           contractAddress={editionDrop?.getAddress() || ""}
-                          action={(cntr) => cntr.erc1155.claim(tokenId, quantity)}
+                          action={(contract) => contract.erc1155.claim(tokenId, quantity)}
                           isDisabled={!canClaim || buttonLoading}
                           onError={(err) => {
                             console.error(err);
@@ -340,3 +340,4 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+

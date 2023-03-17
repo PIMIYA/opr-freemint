@@ -5,17 +5,17 @@ import "../styles/globals.css";
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
 // You can also import additional chains from `@thirdweb-dev/chains` and pass them directly.
-const activeChain = ChainId.Mumbai;
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThirdwebProvider
-      activeChain={activeChain}
+      activeChain={ChainId.Mumbai}
       sdkOptions={{
-        openzeppelin: {
-          relayerUrl: "<open-zeppelin-relayer-url>", // your OZ Defender relayer URL
-          relayerForwarderAddress: "<open-zeppelin-forwarder-address>", // the OZ defender relayer address (defaults to the standard one)
-        }
+        gasless: {
+          openzeppelin: {
+            relayerUrl: process.env.NEXT_PUBLIC_RELAYER_URL,
+          },
+        },
       }}
     >
       <Component {...pageProps} />
