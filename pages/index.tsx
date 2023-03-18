@@ -18,6 +18,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { BigNumber, utils } from "ethers";
 import { parseIneligibility } from "../utils/parseIneligibility";
+// import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
 
 // Put Your Edition Drop Contract address from the dashboard here
 const myEditionDropContractAddress =
@@ -35,6 +36,9 @@ const Home: NextPage = () => {
 
   const [, switchNetwork] = useNetwork();
   const isWrongNetwork = useNetworkMismatch();
+
+  // const connectWithMagic = useMagic(); // Hook to connect with Magic Link.
+  // const [email, setEmail] = useState<string>(""); // State to hold the email address the user entered.
 
   const claimConditions = useClaimConditions(editionDrop);
   const activeClaimCondition = useActiveClaimConditionForWallet(
@@ -243,6 +247,44 @@ const Home: NextPage = () => {
                 <p className={styles.description}>
                   {contractMetadata?.description}
                 </p>
+                <div className={styles.connect}>
+                  <ConnectWallet
+                    accentColor={isWrongNetwork ? "grey" : "navy"}
+                    colorMode="dark"
+                    btnTitle="Connect Wallet"
+                  />
+                </div>
+
+                {/* <h2 style={{ fontSize: "1.3rem" }}>Login With Email</h2>
+                <div
+                  style={{
+                    width: 360,
+                    maxWidth: "90vw",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                    gap: 16,
+                  }}
+                >
+                  <input
+                    type="email"
+                    placeholder="Your Email Address"
+                    className={styles.textInput}
+                    style={{ width: "90%", marginBottom: 0 }}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+
+                  <a
+                    className={styles.mainButton}
+                    onClick={() => {
+                      connectWithMagic({ email });
+                    }}
+                  >
+                    Login
+                  </a>
+                </div> */}
+
               </div>
 
               <div className={styles.imageSide}>
@@ -314,6 +356,7 @@ const Home: NextPage = () => {
                         <Web3Button
                           contractAddress={editionDrop?.getAddress() || ""}
                           action={(contract) => contract.erc1155.claim(tokenId, quantity)}
+                          // action={(contract) => contract.erc1155.claimTo(contractAddress, tokenId, quantity)}
                           isDisabled={!canClaim || buttonLoading}
                           onError={(err) => {
                             console.error(err);

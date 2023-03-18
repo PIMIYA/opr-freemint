@@ -35,8 +35,8 @@
 }
 
 .connect {
-  margin-bottom: 2rem;
-  width: 230px;
+  margin-bottom: 0rem;
+  width: 360px;
 }
 
 .description {
@@ -148,7 +148,7 @@
   align-items: center;
   justify-content: center;
   gap: 10%;
-  margin-top: 24px;
+  margin-top: 14px;
 }
 
 .infoSide {
