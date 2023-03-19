@@ -18,7 +18,7 @@ import styles from "../styles/Home.module.css";
 import { useEffect, useMemo, useState } from "react";
 import { BigNumber, utils } from "ethers";
 import { parseIneligibility } from "../utils/parseIneligibility";
-// import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
+import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
 
 // Put Your Edition Drop Contract address from the dashboard here
 const myEditionDropContractAddress =
@@ -37,8 +37,8 @@ const Home: NextPage = () => {
   const [, switchNetwork] = useNetwork();
   const isWrongNetwork = useNetworkMismatch();
 
-  // const connectWithMagic = useMagic(); // Hook to connect with Magic Link.
-  // const [email, setEmail] = useState<string>(""); // State to hold the email address the user entered.
+  const connectWithMagic = useMagic(); // Hook to connect with Magic Link.
+  const [email, setEmail] = useState<string>(""); // State to hold the email address the user entered.
 
   const claimConditions = useClaimConditions(editionDrop);
   const activeClaimCondition = useActiveClaimConditionForWallet(
@@ -228,7 +228,7 @@ const Home: NextPage = () => {
     if (isWrongNetwork && switchNetwork) {
       setTimeout(() => {
         switchNetwork(ChainId.Mumbai);
-      }, 2000);
+      }, 1000);
     }
   }, [address, isWrongNetwork, switchNetwork]);
 
@@ -255,7 +255,7 @@ const Home: NextPage = () => {
                   />
                 </div>
 
-                {/* <h2 style={{ fontSize: "1.3rem" }}>Login With Email</h2>
+                <h2 style={{ fontSize: "1.3rem" }}>Login With Email</h2>
                 <div
                   style={{
                     width: 360,
@@ -283,7 +283,7 @@ const Home: NextPage = () => {
                   >
                     Login
                   </a>
-                </div> */}
+                </div>
 
               </div>
 

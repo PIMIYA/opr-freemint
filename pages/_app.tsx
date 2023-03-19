@@ -2,7 +2,7 @@ import type { AppProps } from "next/app";
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 import Head from "next/head";
 import "../styles/globals.css";
-// import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
+import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
 
 // This is the chain your dApp will work on.
 // Change this to the chain your app is built for.
@@ -10,29 +10,29 @@ import "../styles/globals.css";
 
 const activeChainId = ChainId.Mumbai;
 
-// const magicLinkConnector = new MagicConnector({
-//   options: {
-//     apiKey: process.env.NEXT_PUBLIC_MAGIC_LINK_API_KEY as string,
-//     rpcUrls: {
-//       [ChainId.Mumbai]: "https://rpc-mumbai.maticvigil.com",
-//     },
-//   },
-// });
+const magicLinkConnector = new MagicConnector({
+  options: {
+    apiKey: process.env.NEXT_PUBLIC_MAGIC_LINK_API_KEY as string,
+    rpcUrls: {
+      [ChainId.Mumbai]: "https://rpc-mumbai.maticvigil.com",
+    },
+  },
+});
 
 
 
-// const connectors = [
-//   "metamask",
-//   "walletConnect",
-//   "walletLink",
-//   magicLinkConnector
-//   // {
-//   //   name: "magic",
-//   //   options: {
-//   //     apiKey: process.env.NEXT_PUBLIC_MAGIC_LINK_API_KEY as string,
-//   //   }
-//   // }
-// ]
+const connectors = [
+  "metamask",
+  "walletConnect",
+  "walletLink",
+  magicLinkConnector
+  // {
+  //   name: "magic",
+  //   options: {
+  //     apiKey: process.env.NEXT_PUBLIC_MAGIC_LINK_API_KEY as string,
+  //   }
+  // }
+]
 
 
 
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
       activeChain={activeChainId}
-    // walletConnectors={connectors}
+      walletConnectors={connectors}
     >
       <Head>
         <title>Edition Drop Minting</title>
