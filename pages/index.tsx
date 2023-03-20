@@ -270,35 +270,37 @@ const Home: NextPage = () => {
                   />
                 </div>
 
-                <h2 style={{ fontSize: "1.3rem" }}>Login With Email</h2>
-                <div
-                  style={{
-                    width: 360,
-                    maxWidth: "90vw",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    gap: 16,
-                  }}
-                >
-                  <input
-                    type="email"
-                    placeholder="Your Email Address"
-                    className={styles.textInput}
-                    style={{ width: "90%", marginBottom: 0 }}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-
-                  <a
-                    className={styles.mainButton}
-                    onClick={() => {
-                      connectWithMagic({ email });
+                {!canClaim ? (
+                  <><h2 style={{ fontSize: "1.0rem" }}>or</h2><h2 style={{ fontSize: "1.0rem" }}>Login With Email</h2><div
+                    style={{
+                      width: 360,
+                      maxWidth: "90vw",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexDirection: "row",
+                      gap: 16,
                     }}
                   >
-                    Login
-                  </a>
-                </div>
+                    <input
+                      type="email"
+                      placeholder="Your Email Address"
+                      className={styles.textInput}
+                      style={{ width: "90%", marginBottom: 0 }}
+                      onChange={(e) => setEmail(e.target.value)} />
+
+                    <a
+                      className={styles.mainButton}
+                      onClick={() => {
+                        connectWithMagic({ email });
+                      }}
+                    >
+                      Login
+                    </a>
+                  </div></>
+                ) : null}
+
+                {/* upload feqture */}
 
                 <div
                   style={{
@@ -326,7 +328,10 @@ const Home: NextPage = () => {
                         isDragging,
                         dragProps,
                       }) => (
+
                         <div>
+                          <p style={{ fontSize: "1.0rem", textAlign: "center" }}>Upload your image</p>
+                          <p style={{ fontSize: "1.0rem", textAlign: "center" }}>for Claiming Free NFTs.</p>
                           <button
                             className={styles.mainButton}
                             onClick={
@@ -384,9 +389,9 @@ const Home: NextPage = () => {
                 </div>
 
                 {claimConditions.data?.length === 0 ||
-                claimConditions.data?.every(
-                  (cc) => cc.maxClaimableSupply === "0"
-                ) ? (
+                  claimConditions.data?.every(
+                    (cc) => cc.maxClaimableSupply === "0"
+                  ) ? (
                   <div>
                     <h2>
                       This drop is not ready to be minted yet. (No claim
@@ -395,7 +400,7 @@ const Home: NextPage = () => {
                   </div>
                 ) : (
                   <>
-                    <p>Quantity</p>
+                    {/* <p>Quantity</p>
                     <div className={styles.quantityContainer}>
                       <button
                         className={`${styles.quantityControlButton}`}
@@ -414,7 +419,7 @@ const Home: NextPage = () => {
                       >
                         +
                       </button>
-                    </div>
+                    </div> */}
 
                     <div className={styles.mintContainer}>
                       {isSoldOut ? (

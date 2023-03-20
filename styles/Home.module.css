@@ -170,7 +170,7 @@
 }
 
 .image {
-  width: 85%;
+  width: 100%;
   border-radius: 16px;
 }
 
@@ -193,7 +193,7 @@
   height: 3rem;
   min-width: 3rem;
   font-size: 1rem;
-  background: #e5e5ea;
+  background: #0000f0;
   background-image: linear-gradient(to left,
       var(--color-primary) 0%,
       var(--color-secondary) 101.52%);
