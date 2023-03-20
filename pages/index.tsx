@@ -11,7 +11,7 @@ import {
   useActiveClaimConditionForWallet,
   useClaimerProofs,
   useClaimIneligibilityReasons,
-  useTotalCirculatingSupply
+  useTotalCirculatingSupply,
 } from "@thirdweb-dev/react";
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
@@ -19,6 +19,9 @@ import { useEffect, useMemo, useState } from "react";
 import { BigNumber, utils } from "ethers";
 import { parseIneligibility } from "../utils/parseIneligibility";
 import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
+
+import Image from "next/image";
+import ImageUploading, { ImageListType } from "react-images-uploading";
 
 // Put Your Edition Drop Contract address from the dashboard here
 const myEditionDropContractAddress =
@@ -28,7 +31,6 @@ const myEditionDropContractAddress =
 const tokenId = 0;
 
 const Home: NextPage = () => {
-
   const address = useAddress();
   const [quantity, setQuantity] = useState(1);
   const { contract: editionDrop } = useContract(myEditionDropContractAddress);
@@ -39,6 +41,19 @@ const Home: NextPage = () => {
 
   const connectWithMagic = useMagic(); // Hook to connect with Magic Link.
   const [email, setEmail] = useState<string>(""); // State to hold the email address the user entered.
+
+  // for upload image
+  const [images, setImages] = useState([]);
+  const maxNumber = 1;
+
+  const onUploadImageChange = (
+    imageList: ImageListType,
+    addUpdateIndex: number[] | undefined
+  ) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList as never[]);
+  };
 
   const claimConditions = useClaimConditions(editionDrop);
   const activeClaimCondition = useActiveClaimConditionForWallet(
@@ -285,6 +300,60 @@ const Home: NextPage = () => {
                   </a>
                 </div>
 
+                <div
+                  style={{
+                    width: 360,
+                    maxWidth: "90vw",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexDirection: "row",
+                    marginTop: "5px",
+                  }}
+                >
+                  {canClaim ? (
+                    <ImageUploading
+                      value={images}
+                      onChange={onUploadImageChange}
+                      maxNumber={maxNumber}
+                    >
+                      {({
+                        imageList,
+                        onImageUpload,
+                        onImageRemoveAll,
+                        onImageUpdate,
+                        onImageRemove,
+                        isDragging,
+                        dragProps,
+                      }) => (
+                        <div>
+                          <button
+                            className={styles.mainButton}
+                            onClick={
+                              imageList.length === 0
+                                ? onImageUpload
+                                : () => onImageUpdate(0)
+                            }
+                          >
+                            Upload
+                          </button>
+                          {imageList.map((image, index) => (
+                            <div key={index}>
+                              <Image
+                                src={image.dataURL ?? ""}
+                                alt=""
+                                width={100}
+                                height={100}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </ImageUploading>
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
 
               <div className={styles.imageSide}>
@@ -315,13 +384,13 @@ const Home: NextPage = () => {
                 </div>
 
                 {claimConditions.data?.length === 0 ||
-                  claimConditions.data?.every(
-                    (cc) => cc.maxClaimableSupply === "0"
-                  ) ? (
+                claimConditions.data?.every(
+                  (cc) => cc.maxClaimableSupply === "0"
+                ) ? (
                   <div>
                     <h2>
-                      This drop is not ready to be minted yet. (No claim condition
-                      set)
+                      This drop is not ready to be minted yet. (No claim
+                      condition set)
                     </h2>
                   </div>
                 ) : (
@@ -355,7 +424,9 @@ const Home: NextPage = () => {
                       ) : (
                         <Web3Button
                           contractAddress={editionDrop?.getAddress() || ""}
-                          action={(contract) => contract.erc1155.claim(tokenId, quantity)}
+                          action={(contract) =>
+                            contract.erc1155.claim(tokenId, quantity)
+                          }
                           // action={(contract) => contract.erc1155.claimTo(contractAddress, tokenId, quantity)}
                           isDisabled={!canClaim || buttonLoading}
                           onError={(err) => {
@@ -377,10 +448,9 @@ const Home: NextPage = () => {
             </>
           )}
         </div>
-      </main >
-    </div >
+      </main>
+    </div>
   );
 };
 
 export default Home;
-
