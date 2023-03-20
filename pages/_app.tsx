@@ -47,7 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         },
       }}
       activeChain={activeChainId}
-      walletConnectors={connectors}
+      walletConnectors={connectors as Array<any>}
     >
       <Head>
         <title>Edition Drop Minting</title>
