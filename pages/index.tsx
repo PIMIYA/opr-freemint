@@ -23,12 +23,44 @@ import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
 import Image from "next/image";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 
+// firebase
+import { ulid } from "ulid";
+import { doc, collection, setDoc, addDoc } from "firebase/firestore";
+import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
+import { fsApp, fsDatabase, fsStorage } from "../storage/fs";
+
 // Put Your Edition Drop Contract address from the dashboard here
 const myEditionDropContractAddress =
   "0x9c4463e2deA3b0f20e9295CCE78DABe0d722f5Ba";
 
 // Put your token ID here
 const tokenId = 0;
+
+const uploadProof = async (
+  address: string | undefined,
+  file: File,
+  id?: string | undefined
+) => {
+  const storageRef = ref(fsStorage, ulid());
+  try {
+    let uploadResult = await uploadBytes(storageRef, file);
+    let url = await getDownloadURL(uploadResult.ref);
+
+    let data = {
+      address: address,
+      imgUrl: url,
+    };
+
+    if (id === undefined) {
+      await addDoc(collection(fsDatabase, "pics"), data);
+    } else {
+      const docRef = doc(fsDatabase, "pics", id);
+      await setDoc(docRef, data, { merge: true });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const Home: NextPage = () => {
   const address = useAddress();
@@ -43,7 +75,7 @@ const Home: NextPage = () => {
   const [email, setEmail] = useState<string>(""); // State to hold the email address the user entered.
 
   // for upload image
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<ImageListType>([]);
   const maxNumber = 1;
 
   const onUploadImageChange = (
@@ -52,7 +84,7 @@ const Home: NextPage = () => {
   ) => {
     // data for submit
     console.log(imageList, addUpdateIndex);
-    setImages(imageList as never[]);
+    setImages(imageList);
   };
 
   const claimConditions = useClaimConditions(editionDrop);
@@ -340,7 +372,7 @@ const Home: NextPage = () => {
                                 : () => onImageUpdate(0)
                             }
                           >
-                            Upload
+                            Select Photo
                           </button>
                           {imageList.map((image, index) => (
                             <div key={index}>
@@ -429,9 +461,16 @@ const Home: NextPage = () => {
                       ) : (
                         <Web3Button
                           contractAddress={editionDrop?.getAddress() || ""}
-                          action={(contract) =>
-                            contract.erc1155.claim(tokenId, quantity)
-                          }
+                          action={async (contract) => {
+                            const img = images.at(0);
+                            if (img === undefined) {
+                              alert("Please upload the photo first");
+                              return;
+                            }
+
+                            await uploadProof(address, img.file!);
+                            contract.erc1155.claim(tokenId, quantity);
+                          }}
                           // action={(contract) => contract.erc1155.claimTo(contractAddress, tokenId, quantity)}
                           isDisabled={!canClaim || buttonLoading}
                           onError={(err) => {
